@@ -26,11 +26,11 @@ app.post("/api/campaign", async (req, res) => {
     } = req.body;
 
     const prompt = `
-Você é o assistente de marketing do DivulvaIA.
+Você é o assistente de marketing do DivulgaIA.
 
-Crie uma campanha de divulgação em português do Brasil para um pequeno negócio.
+Crie uma campanha completa de divulgação em português do Brasil para um pequeno negócio.
 
-Dados do negócio:
+DADOS DO NEGÓCIO:
 Nome: ${businessName || ""}
 Produto/serviço: ${product || ""}
 Oferta/preço: ${offer || ""}
@@ -40,18 +40,40 @@ Região: ${region || ""}
 Objetivo: ${objective || ""}
 Detalhes: ${details || ""}
 
-Gere conteúdo separado para:
+IMPORTANTE:
+- Não invente informações.
+- Use somente os dados fornecidos.
+- Escreva de forma comercial, natural e atrativa.
+- Crie chamadas para ação.
+- Inclua WhatsApp e Instagram quando fornecidos.
+- Entregue o resultado EXATAMENTE nos cinco blocos abaixo.
+- Não coloque explicações antes ou depois dos blocos.
 
-1. WHATSAPP
-2. INSTAGRAM
-3. STORIES
-4. REELS
-5. CALENDÁRIO DE 7 DIAS
+=== WHATSAPP ===
+Crie uma mensagem pronta para enviar pelo WhatsApp.
 
-O texto deve ser comercial, natural, atrativo e fácil de copiar.
-Não invente informações que não foram fornecidas.
-Use chamadas para ação.
-Inclua WhatsApp e Instagram quando fornecidos.
+=== INSTAGRAM ===
+Crie uma legenda completa para publicação no Instagram.
+Inclua uma chamada para ação e hashtags relevantes.
+
+=== STORIES ===
+Crie uma sequência de 5 Stories.
+Cada Story deve ter uma frase curta e objetiva.
+
+=== REELS ===
+Crie um roteiro curto para Reels.
+Inclua:
+- Gancho inicial
+- Texto/cenas
+- Chamada para ação
+
+=== CALENDÁRIO 7 DIAS ===
+Crie um calendário de divulgação para 7 dias.
+Para cada dia, informe:
+- Dia
+- Tipo de conteúdo
+- O que publicar
+- Objetivo
 `;
 
     const response = await client.responses.create({
@@ -59,12 +81,50 @@ Inclua WhatsApp e Instagram quando fornecidos.
       input: prompt,
     });
 
+    const texto = response.output_text || "";
+
+    const whatsappText = extrairBloco(
+      texto,
+      "=== WHATSAPP ===",
+      "=== INSTAGRAM ==="
+    );
+
+    const instagramText = extrairBloco(
+      texto,
+      "=== INSTAGRAM ===",
+      "=== STORIES ==="
+    );
+
+    const storiesText = extrairBloco(
+      texto,
+      "=== STORIES ===",
+      "=== REELS ==="
+    );
+
+    const reelsText = extrairBloco(
+      texto,
+      "=== REELS ===",
+      "=== CALENDÁRIO 7 DIAS ==="
+    );
+
+    const calendarioText = extrairBloco(
+      texto,
+      "=== CALENDÁRIO 7 DIAS ===",
+      null
+    );
+
     res.json({
       success: true,
-      result: response.output_text,
+      whatsapp: whatsappText,
+      instagram: instagramText,
+      stories: storiesText,
+      reels: reelsText,
+      calendario: calendarioText,
+      result: texto,
     });
+
   } catch (error) {
-    console.error(error);
+    console.error("ERRO:", error);
 
     res.status(500).json({
       success: false,
@@ -72,6 +132,24 @@ Inclua WhatsApp e Instagram quando fornecidos.
     });
   }
 });
+
+function extrairBloco(texto, inicio, fim) {
+  const inicioIndex = texto.indexOf(inicio);
+
+  if (inicioIndex === -1) {
+    return "";
+  }
+
+  const inicioConteudo = inicioIndex + inicio.length;
+
+  const fimIndex = fim
+    ? texto.indexOf(fim, inicioConteudo)
+    : texto.length;
+
+  return texto
+    .substring(inicioConteudo, fimIndex === -1 ? texto.length : fimIndex)
+    .trim();
+}
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
