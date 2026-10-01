@@ -1,358 +1,431 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DivulgaIA</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{box-sizing:border-box}
+  <title>DivulgaIA</title>
 
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f6fa;
-  color:#172033;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-header{
-  background:#111827;
-  color:#fff;
-  padding:28px 20px;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
 
-header>div,main{
-  max-width:1050px;
-  margin:auto;
-}
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
 
-h1{margin:0 0 6px}
+    header {
+      text-align: center;
+      padding: 25px 10px;
+    }
 
-header p{
-  margin:0;
-  color:#cbd5e1;
-}
+    header h1 {
+      margin: 0;
+      font-size: 36px;
+      color: #2563eb;
+    }
 
-main{
-  padding:24px 20px;
-  display:grid;
-  grid-template-columns:360px 1fr;
-  gap:20px;
-}
+    header p {
+      margin-top: 8px;
+      color: #667085;
+      font-size: 17px;
+    }
 
-.card{
-  background:#fff;
-  border:1px solid #e5e7eb;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 6px 20px #0000000b;
-}
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.07);
+    }
 
-label{
-  display:block;
-  font-weight:700;
-  margin:13px 0 6px;
-}
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 15px;
+      margin-bottom: 7px;
+    }
 
-input,textarea,select{
-  width:100%;
-  padding:11px;
-  border:1px solid #cbd5e1;
-  border-radius:10px;
-  font-size:15px;
-}
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      font-size: 15px;
+    }
 
-textarea{min-height:90px}
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
 
-.btn{
-  width:100%;
-  border:0;
-  border-radius:10px;
-  padding:13px;
-  margin-top:14px;
-  font-weight:700;
-  cursor:pointer;
-  background:#111827;
-  color:#fff;
-}
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
 
-.secondary{
-  background:#e5e7eb;
-  color:#111827;
-}
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 18px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-.tabs{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:16px;
-}
+    .generate {
+      background: #2563eb;
+      color: white;
+      flex: 1;
+    }
 
-.tab{
-  border:1px solid #d1d5db;
-  background:white;
-  padding:8px 12px;
-  border-radius:20px;
-  cursor:pointer;
-}
+    .clear {
+      background: #e5e7eb;
+      color: #111827;
+    }
 
-.tab.active{
-  background:#111827;
-  color:#fff;
-}
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+      color: #2563eb;
+      font-weight: bold;
+    }
 
-.out{
-  white-space:pre-wrap;
-  line-height:1.55;
-  min-height:390px;
-}
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 15px;
+    }
 
-.small{
-  font-size:13px;
-  color:#64748b;
-}
+    .tab {
+      background: #e5e7eb;
+      color: #374151;
+      white-space: nowrap;
+    }
 
-.status{
-  margin-top:10px;
-  font-size:13px;
-  color:#64748b;
-}
+    .tab.active {
+      background: #2563eb;
+      color: white;
+    }
 
-@media(max-width:800px){
-  main{grid-template-columns:1fr}
-}
-</style>
+    .content {
+      display: none;
+    }
+
+    .content.active {
+      display: block;
+    }
+
+    .result-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 18px;
+      min-height: 220px;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    .copy {
+      margin-top: 12px;
+      background: #16a34a;
+      color: white;
+    }
+
+    .error {
+      display: none;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-<div>
-<h1>✨ DivulgaIA</h1>
-<p>Sua divulgação pronta em poucos segundos.</p>
-</div>
-</header>
+  <div class="container">
 
-<main>
+    <header>
+      <h1>DivulgaIA</h1>
+      <p>Sua divulgação pronta em poucos segundos.</p>
+    </header>
 
-<section class="card">
+    <div class="card">
 
-<h2>Nova campanha</h2>
+      <label>Nome do negócio</label>
+      <input id="businessName" placeholder="Ex.: Salgados da Alê">
 
-<p class="small">
-Preencha os dados e deixe a IA criar sua divulgação.
-</p>
+      <label>Produto ou serviço</label>
+      <input id="product" placeholder="Ex.: Coxinhas e salgados">
 
-<label>Nome do negócio</label>
-<input id="nome" placeholder="Ex.: Salgados da Alê">
+      <label>Oferta / preço</label>
+      <input id="offer" placeholder="Ex.: 25 unidades por R$15">
 
-<label>Produto/serviço</label>
-<input id="produto" placeholder="Ex.: salgados">
+      <label>WhatsApp</label>
+      <input id="whatsapp" placeholder="Ex.: (11) 99999-9999">
 
-<label>Oferta/preço</label>
-<input id="oferta" placeholder="Ex.: 25 unidades por R$15">
+      <label>Instagram</label>
+      <input id="instagram" placeholder="Ex.: @salgadosdaale">
 
-<label>WhatsApp</label>
-<input id="whatsapp" placeholder="(11) 99999-9999">
+      <label>Região</label>
+      <input id="region" placeholder="Ex.: Barueri e região">
 
-<label>Instagram</label>
-<input id="instagram" placeholder="@seunegocio">
+      <label>Objetivo</label>
+      <select id="objective">
+        <option value="">Selecione</option>
+        <option value="Vender">Vender</option>
+        <option value="Atrair clientes">Atrair clientes</option>
+        <option value="Divulgar produto">Divulgar produto</option>
+        <option value="Divulgar serviço">Divulgar serviço</option>
+        <option value="Ganhar seguidores">Ganhar seguidores</option>
+      </select>
 
-<label>Região</label>
-<input id="regiao" placeholder="Ex.: Barueri e região">
+      <label>Detalhes</label>
+      <textarea id="details" placeholder="Ex.: Entrega no Parque Viana"></textarea>
 
-<label>Objetivo</label>
-<select id="objetivo">
-<option>Vender</option>
-<option>Atrair clientes</option>
-<option>Divulgar promoção</option>
-<option>Lançar produto</option>
-</select>
+      <div class="buttons">
+        <button class="generate" onclick="gerarCampanha()">
+          🚀 Gerar campanha com IA
+        </button>
 
-<label>Detalhes</label>
-<textarea id="detalhes" placeholder="Entrega, bairro, prazo, diferenciais..."></textarea>
+        <button class="clear" onclick="limparFormulario()">
+          Limpar
+        </button>
+      </div>
 
-<button class="btn" onclick="gerar()">
-🚀 Gerar campanha com IA
-</button>
+      <div id="loading" class="loading">
+        🤖 Preparando sua campanha...
+      </div>
 
-<button class="btn secondary" onclick="limpar()">
-Limpar
-</button>
+      <div id="error" class="error"></div>
 
-<div id="status" class="status"></div>
+    </div>
 
-</section>
+    <div class="card">
 
-<section class="card">
+      <div class="tabs">
 
-<div class="tabs">
+        <button class="tab active" onclick="mostrarAba('whatsapp', this)">
+          WhatsApp
+        </button>
 
-<button class="tab active" onclick="aba('whatsapp',this)">
-WhatsApp
-</button>
+        <button class="tab" onclick="mostrarAba('instagram', this)">
+          Instagram
+        </button>
 
-<button class="tab" onclick="aba('instagram',this)">
-Instagram
-</button>
+        <button class="tab" onclick="mostrarAba('stories', this)">
+          Stories
+        </button>
 
-<button class="tab" onclick="aba('stories',this)">
-Stories
-</button>
+        <button class="tab" onclick="mostrarAba('reels', this)">
+          Reels
+        </button>
 
-<button class="tab" onclick="aba('reels',this)">
-Reels
-</button>
+        <button class="tab" onclick="mostrarAba('calendario', this)">
+          7 dias
+        </button>
 
-<button class="tab" onclick="aba('calendario',this)">
-7 dias
-</button>
+      </div>
 
-</div>
+      <div id="whatsapp" class="content active">
+        <div id="textoWhatsapp" class="result-box">
+          Sua mensagem para WhatsApp aparecerá aqui.
+        </div>
+        <button class="copy" onclick="copiarTexto('textoWhatsapp')">
+          📋 Copiar WhatsApp
+        </button>
+      </div>
 
-<div id="out" class="out">
-Sua campanha aparecerá aqui.
-</div>
+      <div id="instagram" class="content">
+        <div id="textoInstagram" class="result-box">
+          Sua legenda para Instagram aparecerá aqui.
+        </div>
+        <button class="copy" onclick="copiarTexto('textoInstagram')">
+          📋 Copiar Instagram
+        </button>
+      </div>
 
-<button class="btn secondary" onclick="copiar()">
-📋 Copiar
-</button>
+      <div id="stories" class="content">
+        <div id="textoStories" class="result-box">
+          Seus Stories aparecerão aqui.
+        </div>
+        <button class="copy" onclick="copiarTexto('textoStories')">
+          📋 Copiar Stories
+        </button>
+      </div>
 
-</section>
+      <div id="reels" class="content">
+        <div id="textoReels" class="result-box">
+          Seu roteiro de Reels aparecerá aqui.
+        </div>
+        <button class="copy" onclick="copiarTexto('textoReels')">
+          📋 Copiar Reels
+        </button>
+      </div>
 
-</main>
+      <div id="calendario" class="content">
+        <div id="textoCalendario" class="result-box">
+          Seu calendário de 7 dias aparecerá aqui.
+        </div>
+        <button class="copy" onclick="copiarTexto('textoCalendario')">
+          📋 Copiar calendário
+        </button>
+      </div>
+
+    </div>
+
+  </div>
 
 <script>
 
-let campanhas={};
+async function gerarCampanha() {
 
-const valor=id=>{
-  return document.getElementById(id).value.trim();
-};
+  const loading = document.getElementById("loading");
+  const error = document.getElementById("error");
 
-async function gerar(){
+  loading.style.display = "block";
+  error.style.display = "none";
 
-  const status=document.getElementById("status");
-  const out=document.getElementById("out");
-
-  const dados={
-    businessName:valor("nome"),
-    product:valor("produto"),
-    offer:valor("oferta"),
-    whatsapp:valor("whatsapp"),
-    instagram:valor("instagram"),
-    region:valor("regiao"),
-    objective:valor("objetivo"),
-    details:valor("detalhes")
+  const dados = {
+    businessName: document.getElementById("businessName").value,
+    product: document.getElementById("product").value,
+    offer: document.getElementById("offer").value,
+    whatsapp: document.getElementById("whatsapp").value,
+    instagram: document.getElementById("instagram").value,
+    region: document.getElementById("region").value,
+    objective: document.getElementById("objective").value,
+    details: document.getElementById("details").value
   };
 
-  if(!dados.businessName && !dados.product){
+  try {
 
-    status.textContent="Digite pelo menos o nome do negócio e o produto/serviço.";
-    return;
-  }
-
-  status.textContent="🤖 Criando sua campanha...";
-
-  out.textContent="A IA está preparando sua divulgação...";
-
-  try{
-
-    const resposta=await fetch("/api/campaign",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
+    const resposta = await fetch("/api/campaign", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
       },
-      body:JSON.stringify(dados)
+      body: JSON.stringify(dados)
     });
 
-    const resultado=await resposta.json();
+    const resultado = await resposta.json();
 
-    if(!resposta.ok){
-
+    if (!resposta.ok || !resultado.success) {
       throw new Error(
-        resultado.error || "Erro ao gerar campanha."
+        resultado.error || "Não foi possível gerar a campanha."
       );
     }
 
-    const texto=resultado.result || "";
+    document.getElementById("textoWhatsapp").textContent =
+      resultado.whatsapp || "Nenhum conteúdo gerado.";
 
-    campanhas.whatsapp=texto;
-    campanhas.instagram=texto;
-    campanhas.stories=texto;
-    campanhas.reels=texto;
-    campanhas.calendario=texto;
+    document.getElementById("textoInstagram").textContent =
+      resultado.instagram || "Nenhum conteúdo gerado.";
 
-    out.textContent=texto;
+    document.getElementById("textoStories").textContent =
+      resultado.stories || "Nenhum conteúdo gerado.";
 
-    status.textContent="✅ Campanha criada com sucesso!";
+    document.getElementById("textoReels").textContent =
+      resultado.reels || "Nenhum conteúdo gerado.";
 
-  }catch(erro){
+    document.getElementById("textoCalendario").textContent =
+      resultado.calendario || "Nenhum conteúdo gerado.";
 
-    console.error(erro);
+  } catch (e) {
 
-    status.textContent=
-      "❌ Não foi possível gerar a campanha. Tente novamente.";
+    console.error(e);
 
-    out.textContent=
-      "Ocorreu um erro ao conectar com a IA.";
+    error.textContent =
+      "Ocorreu um erro ao conectar com a IA. " + e.message;
+
+    error.style.display = "block";
+
+  } finally {
+
+    loading.style.display = "none";
+
   }
 }
 
-function aba(tipo,botao){
 
-  if(!campanhas[tipo]){
-    return;
-  }
+function mostrarAba(nome, botao) {
 
-  document
-    .querySelectorAll(".tab")
-    .forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".content").forEach(function(elemento) {
+    elemento.classList.remove("active");
+  });
+
+  document.querySelectorAll(".tab").forEach(function(elemento) {
+    elemento.classList.remove("active");
+  });
+
+  document.getElementById(nome).classList.add("active");
 
   botao.classList.add("active");
-
-  document.getElementById("out").textContent=
-    campanhas[tipo];
 }
 
-async function copiar(){
 
-  const texto=document.getElementById("out").textContent;
+async function copiarTexto(id) {
 
-  if(!texto || texto==="Sua campanha aparecerá aqui."){
-    return;
-  }
+  const texto = document.getElementById(id).textContent;
 
-  try{
+  try {
 
     await navigator.clipboard.writeText(texto);
 
-    document.getElementById("status").textContent=
-      "📋 Texto copiado!";
+    alert("Texto copiado!");
 
-  }catch(e){
+  } catch (e) {
 
     alert("Não foi possível copiar automaticamente.");
+
   }
 }
 
-function limpar(){
 
-  document.querySelectorAll("input,textarea").forEach(
-    campo=>campo.value=""
-  );
+function limparFormulario() {
 
-  document.getElementById("objetivo").value="Vender";
+  document.querySelectorAll("input, textarea").forEach(function(elemento) {
+    elemento.value = "";
+  });
 
-  document.getElementById("out").textContent=
-    "Sua campanha aparecerá aqui.";
+  document.getElementById("objective").value = "";
 
-  document.getElementById("status").textContent="";
+  document.getElementById("textoWhatsapp").textContent =
+    "Sua mensagem para WhatsApp aparecerá aqui.";
 
-  campanhas={};
+  document.getElementById("textoInstagram").textContent =
+    "Sua legenda para Instagram aparecerá aqui.";
+
+  document.getElementById("textoStories").textContent =
+    "Seus Stories aparecerão aqui.";
+
+  document.getElementById("textoReels").textContent =
+    "Seu roteiro de Reels aparecerá aqui.";
+
+  document.getElementById("textoCalendario").textContent =
+    "Seu calendário de 7 dias aparecerá aqui.";
+
+  document.getElementById("error").style.display = "none";
 }
 
 </script>
 
 </body>
-  </html>
+          </html>
