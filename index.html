@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>DivulgaIA</title>
+  <title>DivulgaIA - Marketing com Inteligência Artificial</title>
 
   <style>
     * {
@@ -13,114 +13,214 @@
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, #dbeafe 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #ede9fe 0%, transparent 35%),
+        #f5f7fb;
       color: #172033;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 980px;
       margin: auto;
       padding: 20px;
     }
 
+    /* TOPO */
+
     header {
       text-align: center;
-      padding: 25px 10px;
+      padding: 35px 10px 25px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      font-size: 34px;
+      font-weight: bold;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+      margin-bottom: 15px;
     }
 
     header h1 {
       margin: 0;
-      font-size: 36px;
-      color: #2563eb;
+      font-size: 42px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     header p {
-      margin-top: 8px;
+      margin: 10px auto 0;
+      max-width: 600px;
       color: #667085;
-      font-size: 17px;
+      font-size: 18px;
     }
 
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      margin-bottom: 20px;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.07);
+    .badge {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4f46e5;
+      font-size: 13px;
+      font-weight: bold;
     }
+
+    /* CARDS */
+
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 22px;
+      padding: 25px;
+      margin-bottom: 22px;
+      box-shadow: 0 10px 35px rgba(15,23,42,0.08);
+      border: 1px solid #e8edf5;
+    }
+
+    .card-title {
+      margin-bottom: 20px;
+    }
+
+    .card-title h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .card-title p {
+      margin: 6px 0 0;
+      color: #667085;
+      font-size: 14px;
+    }
+
+    /* FORMULÁRIO */
 
     label {
       display: block;
-      font-weight: bold;
-      margin-top: 15px;
+      font-weight: 700;
+      margin-top: 16px;
       margin-bottom: 7px;
+      color: #344054;
     }
 
     input,
     textarea,
     select {
       width: 100%;
-      padding: 13px;
+      padding: 14px;
       border: 1px solid #d0d5dd;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 15px;
+      background: white;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.10);
     }
 
     textarea {
-      min-height: 100px;
+      min-height: 110px;
       resize: vertical;
     }
 
     .buttons {
       display: flex;
       gap: 10px;
-      margin-top: 20px;
+      margin-top: 22px;
       flex-wrap: wrap;
     }
 
     button {
       border: 0;
-      border-radius: 10px;
-      padding: 13px 18px;
+      border-radius: 12px;
+      padding: 14px 18px;
       font-size: 15px;
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
     }
 
     .generate {
-      background: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
       color: white;
       flex: 1;
+      min-width: 220px;
+      box-shadow: 0 8px 20px rgba(79,70,229,0.25);
     }
 
     .clear {
-      background: #e5e7eb;
-      color: #111827;
+      background: #eef0f4;
+      color: #344054;
     }
 
     .loading {
       display: none;
       text-align: center;
-      margin-top: 15px;
-      color: #2563eb;
+      margin-top: 16px;
+      color: #4f46e5;
       font-weight: bold;
+    }
+
+    .error {
+      display: none;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 13px;
+      border-radius: 12px;
+      margin-top: 15px;
+    }
+
+    /* RESULTADOS */
+
+    .results-header {
+      margin-bottom: 18px;
+    }
+
+    .results-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .results-header p {
+      margin: 6px 0 0;
+      color: #667085;
+      font-size: 14px;
     }
 
     .tabs {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
+      padding-bottom: 4px;
     }
 
     .tab {
-      background: #e5e7eb;
-      color: #374151;
+      background: #eef0f4;
+      color: #475467;
       white-space: nowrap;
     }
 
     .tab.active {
-      background: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
       color: white;
     }
 
@@ -135,11 +235,12 @@
     .result-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 18px;
-      min-height: 220px;
+      border-radius: 14px;
+      padding: 20px;
+      min-height: 240px;
       white-space: pre-wrap;
-      line-height: 1.6;
+      line-height: 1.65;
+      color: #344054;
     }
 
     .copy {
@@ -148,242 +249,555 @@
       color: white;
     }
 
-    .error {
-      display: none;
-      background: #fee2e2;
-      color: #991b1b;
-      padding: 12px;
-      border-radius: 10px;
-      margin-top: 15px;
+    /* RODAPÉ */
+
+    footer {
+      text-align: center;
+      padding: 25px 10px 40px;
+      color: #98a2b3;
+      font-size: 13px;
+    }
+
+    /* CELULAR */
+
+    @media (max-width: 600px) {
+
+      .container {
+        padding: 12px;
+      }
+
+      header {
+        padding: 25px 8px 20px;
+      }
+
+      header h1 {
+        font-size: 34px;
+      }
+
+      header p {
+        font-size: 16px;
+      }
+
+      .card {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .generate {
+        width: 100%;
+      }
+
+      .clear {
+        width: 100%;
+      }
+
+      .result-box {
+        min-height: 220px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <header>
-      <h1>DivulgaIA</h1>
-      <p>Sua divulgação pronta em poucos segundos.</p>
-    </header>
+  <header>
 
-    <div class="card">
+    <div class="logo">IA</div>
 
-      <label>Nome do negócio</label>
-      <input id="businessName" placeholder="Ex.: Salgados da Alê">
+    <h1>DivulgaIA</h1>
 
-      <label>Produto ou serviço</label>
-      <input id="product" placeholder="Ex.: Coxinhas e salgados">
+    <p>
+      Sua divulgação pronta em poucos segundos.
+    </p>
 
-      <label>Oferta / preço</label>
-      <input id="offer" placeholder="Ex.: 25 unidades por R$15">
+    <div class="badge">
+      ✨ Marketing inteligente para pequenos negócios
+    </div>
 
-      <label>WhatsApp</label>
-      <input id="whatsapp" placeholder="Ex.: (11) 99999-9999">
+  </header>
 
-      <label>Instagram</label>
-      <input id="instagram" placeholder="Ex.: @salgadosdaale">
 
-      <label>Região</label>
-      <input id="region" placeholder="Ex.: Barueri e região">
+  <!-- FORMULÁRIO -->
 
-      <label>Objetivo</label>
-      <select id="objective">
-        <option value="">Selecione</option>
-        <option value="Vender">Vender</option>
-        <option value="Atrair clientes">Atrair clientes</option>
-        <option value="Divulgar produto">Divulgar produto</option>
-        <option value="Divulgar serviço">Divulgar serviço</option>
-        <option value="Ganhar seguidores">Ganhar seguidores</option>
-      </select>
+  <div class="card">
 
-      <label>Detalhes</label>
-      <textarea id="details" placeholder="Ex.: Entrega no Parque Viana"></textarea>
+    <div class="card-title">
+      <h2>🚀 Crie sua campanha</h2>
+      <p>
+        Preencha as informações do seu negócio e deixe a IA preparar sua divulgação.
+      </p>
+    </div>
 
-      <div class="buttons">
-        <button class="generate" onclick="gerarCampanha()">
-          🚀 Gerar campanha com IA
-        </button>
+    <label>Nome do negócio</label>
 
-        <button class="clear" onclick="limparFormulario()">
-          Limpar
-        </button>
-      </div>
+    <input
+      id="businessName"
+      placeholder="Ex.: Salgados da Alê"
+    >
 
-      <div id="loading" class="loading">
-        🤖 Preparando sua campanha...
-      </div>
 
-      <div id="error" class="error"></div>
+    <label>Produto ou serviço</label>
+
+    <input
+      id="product"
+      placeholder="Ex.: Coxinhas e salgados"
+    >
+
+
+    <label>Oferta / preço</label>
+
+    <input
+      id="offer"
+      placeholder="Ex.: 25 unidades por R$15"
+    >
+
+
+    <label>WhatsApp</label>
+
+    <input
+      id="whatsapp"
+      placeholder="Ex.: (11) 99999-9999"
+    >
+
+
+    <label>Instagram</label>
+
+    <input
+      id="instagram"
+      placeholder="Ex.: @salgadosdaale"
+    >
+
+
+    <label>Região</label>
+
+    <input
+      id="region"
+      placeholder="Ex.: Barueri e região"
+    >
+
+
+    <label>Objetivo</label>
+
+    <select id="objective">
+
+      <option value="">Selecione</option>
+
+      <option value="Vender">
+        Vender
+      </option>
+
+      <option value="Atrair clientes">
+        Atrair clientes
+      </option>
+
+      <option value="Divulgar produto">
+        Divulgar produto
+      </option>
+
+      <option value="Divulgar serviço">
+        Divulgar serviço
+      </option>
+
+      <option value="Ganhar seguidores">
+        Ganhar seguidores
+      </option>
+
+    </select>
+
+
+    <label>Detalhes</label>
+
+    <textarea
+      id="details"
+      placeholder="Ex.: Entrega no Parque Viana"
+    ></textarea>
+
+
+    <div class="buttons">
+
+      <button
+        class="generate"
+        onclick="gerarCampanha()"
+      >
+        🚀 Gerar campanha com IA
+      </button>
+
+      <button
+        class="clear"
+        onclick="limparFormulario()"
+      >
+        Limpar
+      </button>
 
     </div>
 
-    <div class="card">
 
-      <div class="tabs">
+    <div
+      id="loading"
+      class="loading"
+    >
+      🤖 Preparando sua campanha...
+    </div>
 
-        <button class="tab active" onclick="mostrarAba('whatsapp', this)">
-          WhatsApp
-        </button>
 
-        <button class="tab" onclick="mostrarAba('instagram', this)">
-          Instagram
-        </button>
+    <div
+      id="error"
+      class="error"
+    ></div>
 
-        <button class="tab" onclick="mostrarAba('stories', this)">
-          Stories
-        </button>
+  </div>
 
-        <button class="tab" onclick="mostrarAba('reels', this)">
-          Reels
-        </button>
 
-        <button class="tab" onclick="mostrarAba('calendario', this)">
-          7 dias
-        </button>
+  <!-- RESULTADOS -->
 
+  <div class="card">
+
+    <div class="results-header">
+
+      <h2>📣 Sua divulgação</h2>
+
+      <p>
+        Escolha onde deseja usar o conteúdo gerado.
+      </p>
+
+    </div>
+
+
+    <div class="tabs">
+
+      <button
+        class="tab active"
+        onclick="mostrarAba('whatsapp', this)"
+      >
+        WhatsApp
+      </button>
+
+      <button
+        class="tab"
+        onclick="mostrarAba('instagram', this)"
+      >
+        Instagram
+      </button>
+
+      <button
+        class="tab"
+        onclick="mostrarAba('stories', this)"
+      >
+        Stories
+      </button>
+
+      <button
+        class="tab"
+        onclick="mostrarAba('reels', this)"
+      >
+        Reels
+      </button>
+
+      <button
+        class="tab"
+        onclick="mostrarAba('calendario', this)"
+      >
+        7 dias
+      </button>
+
+    </div>
+
+
+    <div
+      id="whatsapp"
+      class="content active"
+    >
+
+      <div
+        id="textoWhatsapp"
+        class="result-box"
+      >
+        Sua mensagem para WhatsApp aparecerá aqui.
       </div>
 
-      <div id="whatsapp" class="content active">
-        <div id="textoWhatsapp" class="result-box">
-          Sua mensagem para WhatsApp aparecerá aqui.
-        </div>
-        <button class="copy" onclick="copiarTexto('textoWhatsapp')">
-          📋 Copiar WhatsApp
-        </button>
+      <button
+        class="copy"
+        onclick="copiarTexto('textoWhatsapp')"
+      >
+        📋 Copiar WhatsApp
+      </button>
+
+    </div>
+
+
+    <div
+      id="instagram"
+      class="content"
+    >
+
+      <div
+        id="textoInstagram"
+        class="result-box"
+      >
+        Sua legenda para Instagram aparecerá aqui.
       </div>
 
-      <div id="instagram" class="content">
-        <div id="textoInstagram" class="result-box">
-          Sua legenda para Instagram aparecerá aqui.
-        </div>
-        <button class="copy" onclick="copiarTexto('textoInstagram')">
-          📋 Copiar Instagram
-        </button>
+      <button
+        class="copy"
+        onclick="copiarTexto('textoInstagram')"
+      >
+        📋 Copiar Instagram
+      </button>
+
+    </div>
+
+
+    <div
+      id="stories"
+      class="content"
+    >
+
+      <div
+        id="textoStories"
+        class="result-box"
+      >
+        Seus Stories aparecerão aqui.
       </div>
 
-      <div id="stories" class="content">
-        <div id="textoStories" class="result-box">
-          Seus Stories aparecerão aqui.
-        </div>
-        <button class="copy" onclick="copiarTexto('textoStories')">
-          📋 Copiar Stories
-        </button>
+      <button
+        class="copy"
+        onclick="copiarTexto('textoStories')"
+      >
+        📋 Copiar Stories
+      </button>
+
+    </div>
+
+
+    <div
+      id="reels"
+      class="content"
+    >
+
+      <div
+        id="textoReels"
+        class="result-box"
+      >
+        Seu roteiro de Reels aparecerá aqui.
       </div>
 
-      <div id="reels" class="content">
-        <div id="textoReels" class="result-box">
-          Seu roteiro de Reels aparecerá aqui.
-        </div>
-        <button class="copy" onclick="copiarTexto('textoReels')">
-          📋 Copiar Reels
-        </button>
+      <button
+        class="copy"
+        onclick="copiarTexto('textoReels')"
+      >
+        📋 Copiar Reels
+      </button>
+
+    </div>
+
+
+    <div
+      id="calendario"
+      class="content"
+    >
+
+      <div
+        id="textoCalendario"
+        class="result-box"
+      >
+        Seu calendário de 7 dias aparecerá aqui.
       </div>
 
-      <div id="calendario" class="content">
-        <div id="textoCalendario" class="result-box">
-          Seu calendário de 7 dias aparecerá aqui.
-        </div>
-        <button class="copy" onclick="copiarTexto('textoCalendario')">
-          📋 Copiar calendário
-        </button>
-      </div>
+      <button
+        class="copy"
+        onclick="copiarTexto('textoCalendario')"
+      >
+        📋 Copiar calendário
+      </button>
 
     </div>
 
   </div>
 
+
+  <footer>
+    DivulgaIA • Sua divulgação pronta em poucos segundos.
+  </footer>
+
+</div>
+
+
 <script>
 
 async function gerarCampanha() {
 
-  const loading = document.getElementById("loading");
-  const error = document.getElementById("error");
+  const loading =
+    document.getElementById("loading");
+
+  const error =
+    document.getElementById("error");
 
   loading.style.display = "block";
+
   error.style.display = "none";
 
+
   const dados = {
-    businessName: document.getElementById("businessName").value,
-    product: document.getElementById("product").value,
-    offer: document.getElementById("offer").value,
-    whatsapp: document.getElementById("whatsapp").value,
-    instagram: document.getElementById("instagram").value,
-    region: document.getElementById("region").value,
-    objective: document.getElementById("objective").value,
-    details: document.getElementById("details").value
+
+    businessName:
+      document.getElementById("businessName").value,
+
+    product:
+      document.getElementById("product").value,
+
+    offer:
+      document.getElementById("offer").value,
+
+    whatsapp:
+      document.getElementById("whatsapp").value,
+
+    instagram:
+      document.getElementById("instagram").value,
+
+    region:
+      document.getElementById("region").value,
+
+    objective:
+      document.getElementById("objective").value,
+
+    details:
+      document.getElementById("details").value
+
   };
+
 
   try {
 
-    const resposta = await fetch("/api/campaign", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(dados)
-    });
+    const resposta =
+      await fetch("/api/campaign", {
 
-    const resultado = await resposta.json();
+        method: "POST",
 
-    if (!resposta.ok || !resultado.success) {
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(dados)
+
+      });
+
+
+    const resultado =
+      await resposta.json();
+
+
+    if (
+      !resposta.ok ||
+      !resultado.success
+    ) {
+
       throw new Error(
-        resultado.error || "Não foi possível gerar a campanha."
+        resultado.error ||
+        "Não foi possível gerar a campanha."
       );
+
     }
 
-    document.getElementById("textoWhatsapp").textContent =
-      resultado.whatsapp || "Nenhum conteúdo gerado.";
 
-    document.getElementById("textoInstagram").textContent =
-      resultado.instagram || "Nenhum conteúdo gerado.";
+    document.getElementById(
+      "textoWhatsapp"
+    ).textContent =
+      resultado.whatsapp ||
+      "Nenhum conteúdo gerado.";
 
-    document.getElementById("textoStories").textContent =
-      resultado.stories || "Nenhum conteúdo gerado.";
 
-    document.getElementById("textoReels").textContent =
-      resultado.reels || "Nenhum conteúdo gerado.";
+    document.getElementById(
+      "textoInstagram"
+    ).textContent =
+      resultado.instagram ||
+      "Nenhum conteúdo gerado.";
 
-    document.getElementById("textoCalendario").textContent =
-      resultado.calendario || "Nenhum conteúdo gerado.";
 
-  } catch (e) {
+    document.getElementById(
+      "textoStories"
+    ).textContent =
+      resultado.stories ||
+      "Nenhum conteúdo gerado.";
+
+
+    document.getElementById(
+      "textoReels"
+    ).textContent =
+      resultado.reels ||
+      "Nenhum conteúdo gerado.";
+
+
+    document.getElementById(
+      "textoCalendario"
+    ).textContent =
+      resultado.calendario ||
+      "Nenhum conteúdo gerado.";
+
+  }
+
+  catch (e) {
 
     console.error(e);
 
     error.textContent =
-      "Ocorreu um erro ao conectar com a IA. " + e.message;
+      "Ocorreu um erro ao conectar com a IA. " +
+      e.message;
 
     error.style.display = "block";
 
-  } finally {
+  }
+
+  finally {
 
     loading.style.display = "none";
 
   }
+
 }
 
 
 function mostrarAba(nome, botao) {
 
-  document.querySelectorAll(".content").forEach(function(elemento) {
-    elemento.classList.remove("active");
-  });
+  document
+    .querySelectorAll(".content")
+    .forEach(function(elemento) {
 
-  document.querySelectorAll(".tab").forEach(function(elemento) {
-    elemento.classList.remove("active");
-  });
+      elemento.classList.remove("active");
 
-  document.getElementById(nome).classList.add("active");
+    });
+
+
+  document
+    .querySelectorAll(".tab")
+    .forEach(function(elemento) {
+
+      elemento.classList.remove("active");
+
+    });
+
+
+  document
+    .getElementById(nome)
+    .classList.add("active");
+
 
   botao.classList.add("active");
+
 }
 
 
 async function copiarTexto(id) {
 
-  const texto = document.getElementById(id).textContent;
+  const texto =
+    document.getElementById(id).textContent;
+
 
   try {
 
@@ -391,41 +805,72 @@ async function copiarTexto(id) {
 
     alert("Texto copiado!");
 
-  } catch (e) {
+  }
 
-    alert("Não foi possível copiar automaticamente.");
+  catch (e) {
+
+    alert(
+      "Não foi possível copiar automaticamente."
+    );
 
   }
+
 }
 
 
 function limparFormulario() {
 
-  document.querySelectorAll("input, textarea").forEach(function(elemento) {
-    elemento.value = "";
-  });
+  document
+    .querySelectorAll("input, textarea")
+    .forEach(function(elemento) {
 
-  document.getElementById("objective").value = "";
+      elemento.value = "";
 
-  document.getElementById("textoWhatsapp").textContent =
+    });
+
+
+  document.getElementById(
+    "objective"
+  ).value = "";
+
+
+  document.getElementById(
+    "textoWhatsapp"
+  ).textContent =
     "Sua mensagem para WhatsApp aparecerá aqui.";
 
-  document.getElementById("textoInstagram").textContent =
+
+  document.getElementById(
+    "textoInstagram"
+  ).textContent =
     "Sua legenda para Instagram aparecerá aqui.";
 
-  document.getElementById("textoStories").textContent =
+
+  document.getElementById(
+    "textoStories"
+  ).textContent =
     "Seus Stories aparecerão aqui.";
 
-  document.getElementById("textoReels").textContent =
+
+  document.getElementById(
+    "textoReels"
+  ).textContent =
     "Seu roteiro de Reels aparecerá aqui.";
 
-  document.getElementById("textoCalendario").textContent =
+
+  document.getElementById(
+    "textoCalendario"
+  ).textContent =
     "Seu calendário de 7 dias aparecerá aqui.";
 
-  document.getElementById("error").style.display = "none";
+
+  document.getElementById(
+    "error"
+  ).style.display = "none";
+
 }
 
 </script>
 
 </body>
-          </html>
+  </html>
