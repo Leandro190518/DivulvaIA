@@ -326,50 +326,72 @@
 
 <!-- LOGIN / CADASTRO -->
 
-<div class="card" id="authCard">
-
-  <div class="card-title">
+<div class="card-title">
     <h2>🔐 Entre ou crie sua conta</h2>
     <p>Crie sua conta para usar o DivulgaIA.</p>
   </div>
 
-  <label>E-mail</label>
+  <div id="loginArea">
 
-  <input
-    type="email"
-    id="authEmail"
-    placeholder="Seu melhor e-mail"
-  >
+    <label>E-mail</label>
 
-  <label>Senha</label>
-
-  <input
-    type="password"
-    id="authPassword"
-    placeholder="Crie uma senha"
-  >
-
-  <div class="buttons">
-
-    <button
-      type="button"
-      id="signupButton"
-      class="generate"
+    <input
+      type="email"
+      id="authEmail"
+      placeholder="Seu melhor e-mail"
     >
-      Criar conta
-    </button>
 
-    <button
-      type="button"
-      id="loginButton"
-      class="clear"
+    <label>Senha</label>
+
+    <input
+      type="password"
+      id="authPassword"
+      placeholder="Sua senha"
     >
-      Entrar
-    </button>
+
+    <div class="buttons">
+
+      <button
+        type="button"
+        id="signupButton"
+        class="generate"
+      >
+        Criar conta
+      </button>
+
+      <button
+        type="button"
+        id="loginButton"
+        class="clear"
+      >
+        Entrar
+      </button>
+
+    </div>
+
+    <p id="authMessage"></p>
 
   </div>
 
-  <p id="authMessage"></p>
+  <div id="loggedArea" style="display:none;">
+
+    <p>
+      ✅ Você está conectado como:
+    </p>
+
+    <strong id="loggedEmail"></strong>
+
+    <br><br>
+
+    <button
+      type="button"
+      id="logoutButton"
+      class="clear"
+    >
+      Sair
+    </button>
+
+  </div>
 
 </div>
   <!-- FORMULÁRIO -->
