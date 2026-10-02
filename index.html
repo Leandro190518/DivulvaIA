@@ -981,6 +981,10 @@ document.getElementById("signupButton").addEventListener("click", async () => {
 const loginArea = document.getElementById("loginArea");
 const loggedArea = document.getElementById("loggedArea");
 const loggedEmail = document.getElementById("loggedEmail");
+
+
+// LOGIN
+
 document.getElementById("loginButton").addEventListener("click", async () => {
 
   const email = document.getElementById("authEmail").value.trim();
@@ -1003,14 +1007,14 @@ document.getElementById("loginButton").addEventListener("click", async () => {
     return;
   }
 
-  message.textContent = "Login realizado com sucesso!";
-
-loginArea.style.display = "none";
-loggedArea.style.display = "block";
-loggedEmail.textContent = email;
+  loginArea.style.display = "none";
+  loggedArea.style.display = "block";
+  loggedEmail.textContent = email;
 
 });
-// CONTROLE DA SESSÃO DO USUÁRIO
+
+
+// VERIFICAR USUÁRIO
 
 async function verificarUsuario() {
 
@@ -1018,15 +1022,10 @@ async function verificarUsuario() {
     data: { user }
   } = await supabaseClient.auth.getUser();
 
-  const loginArea = document.getElementById("loginArea");
-  const loggedArea = document.getElementById("loggedArea");
-  const loggedEmail = document.getElementById("loggedEmail");
-
   if (user) {
 
     loginArea.style.display = "none";
     loggedArea.style.display = "block";
-
     loggedEmail.textContent = user.email;
 
   } else {
@@ -1039,18 +1038,19 @@ async function verificarUsuario() {
 
 
 // Verifica quando a página abre
+
 verificarUsuario();
 
 
-// Atualiza quando o estado de login muda
-supabaseClient.auth.onAuthStateChange((event, session) => {
+// Detecta login e logout
 
+supabaseClient.auth.onAuthStateChange(() => {
   verificarUsuario();
-
 });
 
 
-// Botão Sair
+// BOTÃO SAIR
+
 document.getElementById("logoutButton").addEventListener("click", async () => {
 
   const { error } = await supabaseClient.auth.signOut();
@@ -1061,14 +1061,10 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
       "Erro ao sair: " + error.message;
 
     return;
-
   }
 
-  document.getElementById("authMessage").textContent =
-    "Você saiu da sua conta.";
+  verificarUsuario();
 
 });
-});
-</script>
 </body>
   </html>
