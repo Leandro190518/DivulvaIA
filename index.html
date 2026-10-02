@@ -1002,6 +1002,12 @@ document.getElementById("loginButton").addEventListener("click", async () => {
   }
 
   message.textContent = "Login realizado com sucesso!";
+
+loginArea.style.display = "none";
+loggedArea.style.display = "block";
+loggedEmail.textContent = email;
+
+});
 // CONTROLE DA SESSÃO DO USUÁRIO
 
 async function verificarUsuario() {
