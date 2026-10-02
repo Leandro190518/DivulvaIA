@@ -978,7 +978,9 @@ document.getElementById("signupButton").addEventListener("click", async () => {
     "Conta criada! Verifique seu e-mail para confirmar o cadastro.";
 });
 
-
+const loginArea = document.getElementById("loginArea");
+const loggedArea = document.getElementById("loggedArea");
+const loggedEmail = document.getElementById("loggedEmail");
 document.getElementById("loginButton").addEventListener("click", async () => {
 
   const email = document.getElementById("authEmail").value.trim();
