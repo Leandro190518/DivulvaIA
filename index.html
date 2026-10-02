@@ -1002,7 +1002,64 @@ document.getElementById("loginButton").addEventListener("click", async () => {
   }
 
   message.textContent = "Login realizado com sucesso!";
+// CONTROLE DA SESSÃO DO USUÁRIO
 
+async function verificarUsuario() {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  const loginArea = document.getElementById("loginArea");
+  const loggedArea = document.getElementById("loggedArea");
+  const loggedEmail = document.getElementById("loggedEmail");
+
+  if (user) {
+
+    loginArea.style.display = "none";
+    loggedArea.style.display = "block";
+
+    loggedEmail.textContent = user.email;
+
+  } else {
+
+    loginArea.style.display = "block";
+    loggedArea.style.display = "none";
+
+  }
+}
+
+
+// Verifica quando a página abre
+verificarUsuario();
+
+
+// Atualiza quando o estado de login muda
+supabaseClient.auth.onAuthStateChange((event, session) => {
+
+  verificarUsuario();
+
+});
+
+
+// Botão Sair
+document.getElementById("logoutButton").addEventListener("click", async () => {
+
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+
+    document.getElementById("authMessage").textContent =
+      "Erro ao sair: " + error.message;
+
+    return;
+
+  }
+
+  document.getElementById("authMessage").textContent =
+    "Você saiu da sua conta.";
+
+});
 });
 </script>
 </body>
