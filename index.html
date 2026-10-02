@@ -942,129 +942,196 @@ function limparFormulario() {
 
 </script>
 <script>
+
   const SUPABASE_URL = "https://zmusbdgjucmtqtfwtnvj.supabase.co";
 
-  const SUPABASE_ANON_KEY = "sb_publishable_KuxO0whFYWD8pFKAxmYZcA_J_I8H6HT";
+  const SUPABASE_ANON_KEY = "SUA_CHAVE_PUBLICA_ATUAL";
 
   const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
   );
-  // LOGIN E CADASTRO
 
-document.getElementById("signupButton").addEventListener("click", async () => {
 
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+  // ELEMENTOS DO LOGIN
 
-  const message = document.getElementById("authMessage");
+  const loginArea = document.getElementById("loginArea");
+  const loggedArea = document.getElementById("loggedArea");
+  const loggedEmail = document.getElementById("loggedEmail");
+  const authMessage = document.getElementById("authMessage");
 
-  if (!email || !password) {
-    message.textContent = "Digite seu e-mail e sua senha.";
-    return;
-  }
 
-  const { error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password
+  // CRIAR CONTA
+
+  document.getElementById("signupButton").addEventListener("click", async function() {
+
+    const email =
+      document.getElementById("authEmail").value.trim();
+
+    const password =
+      document.getElementById("authPassword").value;
+
+
+    if (!email || !password) {
+
+      authMessage.textContent =
+        "Digite seu e-mail e sua senha.";
+
+      return;
+    }
+
+
+    const { error } =
+      await supabaseClient.auth.signUp({
+        email: email,
+        password: password
+      });
+
+
+    if (error) {
+
+      authMessage.textContent =
+        "Erro ao criar conta: " + error.message;
+
+      return;
+    }
+
+
+    authMessage.textContent =
+      "Conta criada! Verifique seu e-mail para confirmar o cadastro.";
+
   });
 
-  if (error) {
-    message.textContent = "Erro ao criar conta: " + error.message;
-    return;
-  }
 
-  message.textContent =
-    "Conta criada! Verifique seu e-mail para confirmar o cadastro.";
-});
+  // ENTRAR
 
-const loginArea = document.getElementById("loginArea");
-const loggedArea = document.getElementById("loggedArea");
-const loggedEmail = document.getElementById("loggedEmail");
+  document.getElementById("loginButton").addEventListener("click", async function() {
+
+    const email =
+      document.getElementById("authEmail").value.trim();
+
+    const password =
+      document.getElementById("authPassword").value;
 
 
-// LOGIN
+    if (!email || !password) {
 
-document.getElementById("loginButton").addEventListener("click", async () => {
+      authMessage.textContent =
+        "Digite seu e-mail e sua senha.";
 
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+      return;
+    }
 
-  const message = document.getElementById("authMessage");
 
-  if (!email || !password) {
-    message.textContent = "Digite seu e-mail e sua senha.";
-    return;
-  }
+    authMessage.textContent =
+      "Entrando...";
 
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email: email,
-    password: password
+
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+
+    if (error) {
+
+      authMessage.textContent =
+        "Erro ao entrar: " + error.message;
+
+      return;
+    }
+
+
+    if (data.user) {
+
+      loginArea.style.display = "none";
+
+      loggedArea.style.display = "block";
+
+      loggedEmail.textContent =
+        data.user.email;
+
+      authMessage.textContent = "";
+
+    }
+
   });
 
-  if (error) {
-    message.textContent = "Erro ao entrar: " + error.message;
-    return;
+
+  // VERIFICAR SESSÃO
+
+  async function verificarUsuario() {
+
+    const {
+      data: { user }
+    } = await supabaseClient.auth.getUser();
+
+
+    if (user) {
+
+      loginArea.style.display = "none";
+
+      loggedArea.style.display = "block";
+
+      loggedEmail.textContent =
+        user.email;
+
+    } else {
+
+      loginArea.style.display = "block";
+
+      loggedArea.style.display = "none";
+
+    }
+
   }
 
-  loginArea.style.display = "none";
-  loggedArea.style.display = "block";
-  loggedEmail.textContent = email;
 
-});
+  verificarUsuario();
 
 
-// VERIFICAR USUÁRIO
+  // OBSERVAR LOGIN / LOGOUT
 
-async function verificarUsuario() {
+  supabaseClient.auth.onAuthStateChange(
+    function(event, session) {
 
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
+      if (session && session.user) {
 
-  if (user) {
+        loginArea.style.display = "none";
 
-    loginArea.style.display = "none";
-    loggedArea.style.display = "block";
-    loggedEmail.textContent = user.email;
+        loggedArea.style.display = "block";
 
-  } else {
+        loggedEmail.textContent =
+          session.user.email;
+
+      } else {
+
+        loginArea.style.display = "block";
+
+        loggedArea.style.display = "none";
+
+      }
+
+    }
+  );
+
+
+  // SAIR
+
+  document.getElementById("logoutButton").addEventListener("click", async function() {
+
+    await supabaseClient.auth.signOut();
 
     loginArea.style.display = "block";
+
     loggedArea.style.display = "none";
 
-  }
-}
+    authMessage.textContent =
+      "Você saiu da sua conta.";
 
+  });
 
-// Verifica quando a página abre
-
-verificarUsuario();
-
-
-// Detecta login e logout
-
-supabaseClient.auth.onAuthStateChange(() => {
-  verificarUsuario();
-});
-
-
-// BOTÃO SAIR
-
-document.getElementById("logoutButton").addEventListener("click", async () => {
-
-  const { error } = await supabaseClient.auth.signOut();
-
-  if (error) {
-
-    document.getElementById("authMessage").textContent =
-      "Erro ao sair: " + error.message;
-
-    return;
-  }
-
-  verificarUsuario();
-
-});
+</script>
 </body>
   </html>
