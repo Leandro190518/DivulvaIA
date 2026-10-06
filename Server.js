@@ -25,6 +25,20 @@ app.post("/api/campaign", async (req, res) => {
       details,
     } = req.body;
 
+    if (!businessName || !product) {
+      return res.status(400).json({
+        success: false,
+        error: "Informe pelo menos o nome do negócio e o produto/serviço.",
+      });
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({
+        success: false,
+        error: "A chave da OpenAI ainda não foi configurada no servidor.",
+      });
+    }
+
     const prompt = `
 Você é o assistente de marketing do DivulgaIA.
 
@@ -79,9 +93,17 @@ Para cada dia, informe:
     const response = await client.responses.create({
       model: "gpt-6-luna",
       input: prompt,
+      max_output_tokens: 2500,
     });
 
     const texto = response.output_text || "";
+
+    if (!texto) {
+      return res.status(502).json({
+        success: false,
+        error: "A IA não retornou conteúdo.",
+      });
+    }
 
     const whatsappText = extrairBloco(
       texto,
@@ -124,11 +146,47 @@ Para cada dia, informe:
     });
 
   } catch (error) {
-    console.error("ERRO:", error);
+    console.error("ERRO OPENAI:", error);
 
-    res.status(500).json({
+    const code = error?.code || error?.error?.code || "";
+    const status = error?.status || error?.statusCode || 500;
+    const message = error?.message || "";
+
+    if (
+      code === "credit_balance_exhausted" ||
+      code === "insufficient_quota" ||
+      /no credits remaining|credit balance|insufficient quota|quota/i.test(message)
+    ) {
+      return res.status(402).json({
+        success: false,
+        error:
+          "A API da OpenAI está sem créditos no momento. O site e o login estão funcionando normalmente; a geração por IA será liberada quando houver créditos na API.",
+        code: "credit_balance_exhausted",
+      });
+    }
+
+    if (status === 401) {
+      return res.status(500).json({
+        success: false,
+        error:
+          "A chave da OpenAI no servidor não foi aceita. Verifique a variável OPENAI_API_KEY no Render.",
+        code: "openai_auth_error",
+      });
+    }
+
+    if (status === 429) {
+      return res.status(429).json({
+        success: false,
+        error:
+          "A API da OpenAI atingiu um limite de uso ou crédito. Tente novamente depois de corrigir o limite indicado pela API.",
+        code: "openai_rate_or_quota_error",
+      });
+    }
+
+    return res.status(500).json({
       success: false,
-      error: "Não foi possível gerar a campanha.",
+      error: "Não foi possível gerar a campanha pela IA neste momento.",
+      code: "openai_unknown_error",
     });
   }
 });
@@ -147,7 +205,10 @@ function extrairBloco(texto, inicio, fim) {
     : texto.length;
 
   return texto
-    .substring(inicioConteudo, fimIndex === -1 ? texto.length : fimIndex)
+    .substring(
+      inicioConteudo,
+      fimIndex === -1 ? texto.length : fimIndex
+    )
     .trim();
 }
 
