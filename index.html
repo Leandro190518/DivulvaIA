@@ -27,8 +27,6 @@
       padding: 20px;
     }
 
-    /* TOPO */
-
     header {
       text-align: center;
       padding: 35px 10px 25px;
@@ -76,8 +74,6 @@
       font-weight: bold;
     }
 
-    /* CARDS */
-
     .card {
       background: rgba(255,255,255,0.95);
       border-radius: 22px;
@@ -101,8 +97,6 @@
       color: #667085;
       font-size: 14px;
     }
-
-    /* FORMULÁRIO */
 
     label {
       display: block;
@@ -188,8 +182,6 @@
       margin-top: 15px;
     }
 
-    /* RESULTADOS */
-
     .results-header {
       margin-bottom: 18px;
     }
@@ -249,16 +241,12 @@
       color: white;
     }
 
-    /* RODAPÉ */
-
     footer {
       text-align: center;
       padding: 25px 10px 40px;
       color: #98a2b3;
       font-size: 13px;
     }
-
-    /* CELULAR */
 
     @media (max-width: 600px) {
 
@@ -301,6 +289,7 @@
       }
     }
   </style>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
@@ -324,86 +313,94 @@
 
   </header>
 
-<!-- LOGIN / CADASTRO -->
 
-<div class="card-title">
-    <h2>🔐 Entre ou crie sua conta</h2>
-    <p>Crie sua conta para usar o DivulgaIA.</p>
-  </div>
+  <!-- LOGIN / CADASTRO -->
 
-  <div id="loginArea">
+  <div class="card">
 
-    <label>E-mail</label>
+    <div class="card-title">
+      <h2>🔐 Entre ou crie sua conta</h2>
+      <p>Crie sua conta para usar o DivulgaIA.</p>
+    </div>
 
-    <input
-      type="email"
-      id="authEmail"
-      placeholder="Seu melhor e-mail"
-    >
+    <div id="loginArea">
 
-    <label>Senha</label>
+      <label>E-mail</label>
 
-    <input
-      type="password"
-      id="authPassword"
-      placeholder="Sua senha"
-    >
-
-    <div class="buttons">
-
-      <button
-        type="button"
-        id="signupButton"
-        class="generate"
+      <input
+        type="email"
+        id="authEmail"
+        placeholder="Seu melhor e-mail"
       >
-        Criar conta
-      </button>
+
+      <label>Senha</label>
+
+      <input
+        type="password"
+        id="authPassword"
+        placeholder="Sua senha"
+      >
+
+      <div class="buttons">
+
+        <button
+          type="button"
+          id="signupButton"
+          class="generate"
+        >
+          Criar conta
+        </button>
+
+        <button
+          type="button"
+          id="loginButton"
+          class="clear"
+        >
+          Entrar
+        </button>
+
+      </div>
+
+      <p id="authMessage"></p>
+
+    </div>
+
+
+    <div id="loggedArea" style="display:none;">
+
+      <p>
+        ✅ Você está conectado como:
+      </p>
+
+      <strong id="loggedEmail"></strong>
+
+      <br><br>
 
       <button
         type="button"
-        id="loginButton"
+        id="logoutButton"
         class="clear"
       >
-        Entrar
+        Sair
       </button>
 
     </div>
 
-    <p id="authMessage"></p>
-
   </div>
 
-  <div id="loggedArea" style="display:none;">
 
-    <p>
-      ✅ Você está conectado como:
-    </p>
-
-    <strong id="loggedEmail"></strong>
-
-    <br><br>
-
-    <button
-      type="button"
-      id="logoutButton"
-      class="clear"
-    >
-      Sair
-    </button>
-
-  </div>
-
-</div>
   <!-- FORMULÁRIO -->
 
   <div class="card">
 
     <div class="card-title">
       <h2>🚀 Crie sua campanha</h2>
+
       <p>
         Preencha as informações do seu negócio e deixe a IA preparar sua divulgação.
       </p>
     </div>
+
 
     <label>Nome do negócio</label>
 
@@ -703,44 +700,54 @@
 
 async function gerarCampanha() {
 
-  const loading =
-    document.getElementById("loading");
-
-  const error =
-    document.getElementById("error");
+  const loading = document.getElementById("loading");
+  const error = document.getElementById("error");
 
   loading.style.display = "block";
-
   error.style.display = "none";
-
+  error.textContent = "";
 
   const dados = {
 
     businessName:
-      document.getElementById("businessName").value,
+      document.getElementById("businessName").value.trim(),
 
     product:
-      document.getElementById("product").value,
+      document.getElementById("product").value.trim(),
 
     offer:
-      document.getElementById("offer").value,
+      document.getElementById("offer").value.trim(),
 
     whatsapp:
-      document.getElementById("whatsapp").value,
+      document.getElementById("whatsapp").value.trim(),
 
     instagram:
-      document.getElementById("instagram").value,
+      document.getElementById("instagram").value.trim(),
 
     region:
-      document.getElementById("region").value,
+      document.getElementById("region").value.trim(),
 
     objective:
       document.getElementById("objective").value,
 
     details:
-      document.getElementById("details").value
+      document.getElementById("details").value.trim()
 
   };
+
+
+  if (!dados.businessName || !dados.product) {
+
+    error.textContent =
+      "Informe pelo menos o nome do negócio e o produto ou serviço.";
+
+    error.style.display = "block";
+
+    loading.style.display = "none";
+
+    return;
+
+  }
 
 
   try {
@@ -759,8 +766,28 @@ async function gerarCampanha() {
       });
 
 
-    const resultado =
-      await resposta.json();
+    const textoResposta =
+      await resposta.text();
+
+
+    let resultado;
+
+
+    try {
+
+      resultado =
+        JSON.parse(textoResposta);
+
+    }
+
+    catch (jsonError) {
+
+      throw new Error(
+        "O servidor respondeu de forma inesperada. Status HTTP: " +
+        resposta.status
+      );
+
+    }
 
 
     if (
@@ -770,7 +797,8 @@ async function gerarCampanha() {
 
       throw new Error(
         resultado.error ||
-        "Não foi possível gerar a campanha."
+        "Não foi possível gerar a campanha. Status HTTP: " +
+        resposta.status
       );
 
     }
@@ -812,17 +840,25 @@ async function gerarCampanha() {
 
   }
 
+
   catch (e) {
 
-    console.error(e);
+    console.error(
+      "ERRO NA CAMPANHA:",
+      e
+    );
 
     error.textContent =
-      "Ocorreu um erro ao conectar com a IA. " +
-      e.message;
+      "⚠️ " +
+      (
+        e.message ||
+        "Não foi possível gerar a campanha."
+      );
 
     error.style.display = "block";
 
   }
+
 
   finally {
 
@@ -941,175 +977,166 @@ function limparFormulario() {
 }
 
 </script>
+
+
 <script>
 
-  const SUPABASE_URL = "https://zmusbdgjucmtqtfwtnvj.supabase.co";
+const SUPABASE_URL =
+  "https://zmusbdgjucmtqtfwtnvj.supabase.co";
 
-  const SUPABASE_ANON_KEY = "sb_publishable_KuxO0whFYWD8pFKAxmYZcA_J_I8H6HT";
 
-  const supabaseClient = window.supabase.createClient(
+const SUPABASE_ANON_KEY =
+  "sb_publishable_KuxO0whFYWD8pFKAxmYZcA_J_I8H6HT";
+
+
+const supabaseClient =
+  window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
   );
 
 
-  // ELEMENTOS DO LOGIN
+// ELEMENTOS DO LOGIN
 
-  const loginArea = document.getElementById("loginArea");
-  const loggedArea = document.getElementById("loggedArea");
-  const loggedEmail = document.getElementById("loggedEmail");
-  const authMessage = document.getElementById("authMessage");
+const loginArea =
+  document.getElementById("loginArea");
 
+const loggedArea =
+  document.getElementById("loggedArea");
 
-  // CRIAR CONTA
+const loggedEmail =
+  document.getElementById("loggedEmail");
 
-  document.getElementById("signupButton").addEventListener("click", async function() {
-
-    const email =
-      document.getElementById("authEmail").value.trim();
-
-    const password =
-      document.getElementById("authPassword").value;
+const authMessage =
+  document.getElementById("authMessage");
 
 
-    if (!email || !password) {
+// CRIAR CONTA
+
+document
+  .getElementById("signupButton")
+  .addEventListener(
+    "click",
+    async function() {
+
+      const email =
+        document
+          .getElementById("authEmail")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("authPassword")
+          .value;
+
+
+      if (!email || !password) {
+
+        authMessage.textContent =
+          "Digite seu e-mail e sua senha.";
+
+        return;
+
+      }
+
+
+      const { error } =
+        await supabaseClient.auth.signUp({
+
+          email: email,
+
+          password: password
+
+        });
+
+
+      if (error) {
+
+        authMessage.textContent =
+          "Erro ao criar conta: " +
+          error.message;
+
+        return;
+
+      }
+
 
       authMessage.textContent =
-        "Digite seu e-mail e sua senha.";
+        "Conta criada! Verifique seu e-mail para confirmar o cadastro.";
 
-      return;
     }
+  );
 
 
-    const { error } =
-      await supabaseClient.auth.signUp({
-        email: email,
-        password: password
-      });
+// ENTRAR
+
+document
+  .getElementById("loginButton")
+  .addEventListener(
+    "click",
+    async function() {
+
+      const email =
+        document
+          .getElementById("authEmail")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("authPassword")
+          .value;
 
 
-    if (error) {
+      if (!email || !password) {
+
+        authMessage.textContent =
+          "Digite seu e-mail e sua senha.";
+
+        return;
+
+      }
+
 
       authMessage.textContent =
-        "Erro ao criar conta: " + error.message;
-
-      return;
-    }
+        "Entrando...";
 
 
-    authMessage.textContent =
-      "Conta criada! Verifique seu e-mail para confirmar o cadastro.";
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
 
-  });
+          email: email,
 
+          password: password
 
-  // ENTRAR
-
-  document.getElementById("loginButton").addEventListener("click", async function() {
-
-    const email =
-      document.getElementById("authEmail").value.trim();
-
-    const password =
-      document.getElementById("authPassword").value;
+        });
 
 
-    if (!email || !password) {
+      if (error) {
 
-      authMessage.textContent =
-        "Digite seu e-mail e sua senha.";
+        authMessage.textContent =
+          "Erro ao entrar: " +
+          error.message;
 
-      return;
-    }
+        return;
 
-
-    authMessage.textContent =
-      "Entrando...";
+      }
 
 
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
+      if (data.user) {
 
+        loginArea.style.display =
+          "none";
 
-    if (error) {
-
-      authMessage.textContent =
-        "Erro ao entrar: " + error.message;
-
-      return;
-    }
-
-
-    if (data.user) {
-
-      loginArea.style.display = "none";
-
-      loggedArea.style.display = "block";
-
-      loggedEmail.textContent =
-        data.user.email;
-
-      authMessage.textContent = "";
-
-    }
-
-  });
-
-
-  // VERIFICAR SESSÃO
-
-  async function verificarUsuario() {
-
-    const {
-      data: { user }
-    } = await supabaseClient.auth.getUser();
-
-
-    if (user) {
-
-      loginArea.style.display = "none";
-
-      loggedArea.style.display = "block";
-
-      loggedEmail.textContent =
-        user.email;
-
-    } else {
-
-      loginArea.style.display = "block";
-
-      loggedArea.style.display = "none";
-
-    }
-
-  }
-
-
-  verificarUsuario();
-
-
-  // OBSERVAR LOGIN / LOGOUT
-
-  supabaseClient.auth.onAuthStateChange(
-    function(event, session) {
-
-      if (session && session.user) {
-
-        loginArea.style.display = "none";
-
-        loggedArea.style.display = "block";
+        loggedArea.style.display =
+          "block";
 
         loggedEmail.textContent =
-          session.user.email;
+          data.user.email;
 
-      } else {
-
-        loginArea.style.display = "block";
-
-        loggedArea.style.display = "none";
+        authMessage.textContent =
+          "";
 
       }
 
@@ -1117,21 +1144,103 @@ function limparFormulario() {
   );
 
 
-  // SAIR
+// VERIFICAR SESSÃO
 
-  document.getElementById("logoutButton").addEventListener("click", async function() {
+async function verificarUsuario() {
 
-    await supabaseClient.auth.signOut();
+  const {
+    data: { user }
+  } =
+    await supabaseClient.auth.getUser();
 
-    loginArea.style.display = "block";
 
-    loggedArea.style.display = "none";
+  if (user) {
 
-    authMessage.textContent =
-      "Você saiu da sua conta.";
+    loginArea.style.display =
+      "none";
 
-  });
+    loggedArea.style.display =
+      "block";
+
+    loggedEmail.textContent =
+      user.email;
+
+  }
+
+  else {
+
+    loginArea.style.display =
+      "block";
+
+    loggedArea.style.display =
+      "none";
+
+  }
+
+}
+
+
+verificarUsuario();
+
+
+// OBSERVAR LOGIN / LOGOUT
+
+supabaseClient.auth.onAuthStateChange(
+  function(event, session) {
+
+    if (
+      session &&
+      session.user
+    ) {
+
+      loginArea.style.display =
+        "none";
+
+      loggedArea.style.display =
+        "block";
+
+      loggedEmail.textContent =
+        session.user.email;
+
+    }
+
+    else {
+
+      loginArea.style.display =
+        "block";
+
+      loggedArea.style.display =
+        "none";
+
+    }
+
+  }
+);
+
+
+// SAIR
+
+document
+  .getElementById("logoutButton")
+  .addEventListener(
+    "click",
+    async function() {
+
+      await supabaseClient.auth.signOut();
+
+      loginArea.style.display =
+        "block";
+
+      loggedArea.style.display =
+        "none";
+
+      authMessage.textContent =
+        "Você saiu da sua conta.";
+
+    }
+  );
 
 </script>
+
 </body>
   </html>
